@@ -6,23 +6,34 @@ REM CONFIGURACIÓN
 REM ================================
 set BASE_DIR=C:\Users\adaxi\Desktop\AOS_SS\A02\codigo
 set DEPLOY_DIR=C:\deploy
-set SERVICES=config_server eureka_server mc_general mc_ingredientes mc_menu mc_reservas 
+set SERVICES=mc_general mc_ingredientes mc_menu mc_reservas 
 set JAVA_OPTS=-Xms256m -Xmx512m
 
-echo.
 echo ===============================================
-echo INICIANDO SERVIDORES
+echo INICIANDO INFRAESTRUCTURA BASICA
 echo ===============================================
-echo.
 
-REM arrancar cada microservicio en consola nueva
-cd "%DEPLOY_DIR%"
+echo Iniciando config_server...
+start "config_server" cmd /k "cd %BASE_DIR%\config_server && mvn spring-boot:run"
+echo Esperando 15 segundos a que arranque Config Server...
+timeout /t 15
+
+echo Iniciando eureka_server...
+start "eureka_server" cmd /k "cd %BASE_DIR%\eureka_server && mvn spring-boot:run"
+echo Esperando 15 segundos a que arranque Eureka...
+timeout /t 15
+
+echo ===============================================
+echo INICIANDO MICROSERVICIOS DE NEGOCIO
+echo ===============================================
+
+set SERVICES=mc_general mc_ingredientes mc_menu mc_reservas 
 
 for %%S in (%SERVICES%) do (
     echo Iniciando microservicio: %%S
     start "%%S" cmd /k "cd %BASE_DIR%\%%S && mvn spring-boot:run"
+    timeout /t 5
 )
 
-echo.
-echo Todos los microservicios han sido desplegados e iniciados.
+echo Todos los servicios iniciados.
 exit /b 0
