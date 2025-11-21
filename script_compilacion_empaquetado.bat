@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 REM ================================
 REM CONFIGURACIÓN
 REM ================================
-set BASE_DIR=C:\Users\adaxi\Desktop\AOS_SS\A02\codigo
+set BASE_DIR=C:\Users\adaxi\Desktop\A2\AOS_A2
 set DEPLOY_DIR=C:\deploy
 set SERVICES=config_server eureka_server mc_general mc_ingredientes mc_menu mc_reservas 
 set JAVA_OPTS=-Xms256m -Xmx512m
