@@ -10,6 +10,7 @@ import es.unex.aos.mc_reservas.repository.MesaRepository;
 
 import java.util.Optional;
 
+@RestController
 public class MesaController {
 
     @Autowired 

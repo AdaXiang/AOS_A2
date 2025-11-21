@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import es.unex.aos.mc_reservas.model.Reserva;
 import es.unex.aos.mc_reservas.repository.ReservaRepository;
 
+@RestController
 public class ReservaController {
 
     @Autowired
