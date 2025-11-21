@@ -11,6 +11,7 @@ import es.unex.aos.mc_reservas.model.Reserva;
 import es.unex.aos.mc_reservas.repository.ReservaRepository;
 
 @RestController
+@RequestMapping("/reservas")
 public class ReservaController {
 
     @Autowired
