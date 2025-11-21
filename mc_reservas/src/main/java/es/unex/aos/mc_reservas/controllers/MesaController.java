@@ -10,22 +10,20 @@ import es.unex.aos.mc_reservas.repository.MesaRepository;
 
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/mesas") 
 public class MesaController {
 
     @Autowired 
     MesaRepository mesaRepository;
     
     // GET /mesas
-    @GetMapping
+    @GetMapping("/mesas")
     public ResponseEntity<Iterable<Mesa>> getMesas() {
         // Devuelve 200 OK con la lista
         return ResponseEntity.ok(mesaRepository.findAll());
     }
 
     // GET /mesas/{id}
-    @GetMapping("/{id}")
+    @GetMapping("/mesas/{id}")
     public ResponseEntity<Mesa> getMesa(@PathVariable Long id) {
         Optional<Mesa> mesaOptional = mesaRepository.findById(id);
         
@@ -39,14 +37,14 @@ public class MesaController {
     }
 
     // GET /mesas/count
-    @GetMapping("/count")
+    @GetMapping("/mesas/count")
     public ResponseEntity<Long> countMesas() {
         // Devuelve 200 OK con el número
         return ResponseEntity.ok(mesaRepository.count());
     }
 
     // POST /mesas
-    @PostMapping
+    @PostMapping("/mesas")
     public ResponseEntity<Mesa> createMesa(@RequestBody Mesa mesa) {
         Mesa mesaGuardada = mesaRepository.save(mesa);
         // Devuelve 201 CREATED y la mesa creada
@@ -54,7 +52,7 @@ public class MesaController {
     }
 
     // PUT /mesas/{id}
-    @PutMapping("/{id}")
+    @PutMapping("/mesas/{id}")
     public ResponseEntity<Mesa> updateMesa(@PathVariable Long id, @RequestBody Mesa mesaDetails) {
         Optional<Mesa> mesaOptional = mesaRepository.findById(id);
 
@@ -74,7 +72,7 @@ public class MesaController {
     }
 
     // DELETE /mesas/{id}
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/mesas/{id}")
     public ResponseEntity<Void> deleteMesa(@PathVariable Long id) {
         if (mesaRepository.existsById(id)) {
             mesaRepository.deleteById(id);
