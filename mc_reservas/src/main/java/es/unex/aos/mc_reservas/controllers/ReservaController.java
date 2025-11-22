@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import es.unex.aos.mc_reservas.model.Reserva;
 import es.unex.aos.mc_reservas.repository.ReservaRepository;
+import es.unex.aos.mc_reservas.service.ReservaService;
 
 @RestController
 @RequestMapping("/reservas")
@@ -16,6 +17,9 @@ public class ReservaController {
 
     @Autowired
     ReservaRepository reservaRepository;
+
+    @Autowired
+    ReservaService reservaService;
 
     // GET /reservas
     @GetMapping
@@ -37,36 +41,42 @@ public class ReservaController {
 
     // POST /reservas
     @PostMapping
-    public ResponseEntity<Reserva> createReserva(@RequestBody Reserva reserva) {
-        // Guardamos la reserva. 
-        // NOTA: El JSON debe incluir el objeto mesa anidado con su ID.
-        Reserva nuevaReserva = reservaRepository.save(reserva);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaReserva);
+    public ResponseEntity<String> createReserva(@RequestBody Reserva reserva) {
+        try {
+            Reserva nuevaReserva = reservaService.crearReserva(reserva);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaReserva.toString());
+            
+        } catch (IllegalArgumentException e) {
+            // Error 400: Datos incorrectos
+            return ResponseEntity.badRequest().body(e.getMessage());
+            
+        } catch (IllegalStateException e) {
+            // Error 409: Conflicto (Mesa ocupada)
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            
+        } catch (Exception e) {
+            // Error 500: Cualquier otra cosa
+            return ResponseEntity.internalServerError().body("Error interno: " + e.getMessage());
+        }
     }
 
     // PUT /reservas/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<Reserva> updateReserva(@PathVariable Long id, @RequestBody Reserva reservaDetails) {
-        Optional<Reserva> reservaOptional = reservaRepository.findById(id);
+    public ResponseEntity<String> updateReserva(@PathVariable Long id, @RequestBody Reserva reservaDetails) {
+        try {
+            Reserva reservaActualizada = reservaService.actualizarReserva(id, reservaDetails);
+            return ResponseEntity.ok(reservaActualizada.toString());
 
-        if (reservaOptional.isPresent()) {
-            Reserva reserva = reservaOptional.get();
+        } catch (IllegalArgumentException e) {
+            // Error 404 o 400: No existe la reserva o datos inválidos
+            return ResponseEntity.notFound().build(); // O badRequest() según prefieras
 
-            // Se actualizan los campos solo si nos envían un valor (no nulo)
-            Optional.ofNullable(reservaDetails.getNombreCliente()).ifPresent(reserva::setNombreCliente);
-            Optional.ofNullable(reservaDetails.getCorreo()).ifPresent(reserva::setCorreo);
-            Optional.ofNullable(reservaDetails.getTelefono()).ifPresent(reserva::setTelefono);
-            Optional.ofNullable(reservaDetails.getFechaReserva()).ifPresent(reserva::setFechaReserva);
-            Optional.ofNullable(reservaDetails.getHoraReserva()).ifPresent(reserva::setHoraReserva);
-            Optional.ofNullable(reservaDetails.getDuracion()).ifPresent(reserva::setDuracion);
-            Optional.ofNullable(reservaDetails.getnComensales()).ifPresent(reserva::setnComensales);
-            Optional.ofNullable(reservaDetails.getMesa()).ifPresent(reserva::setMesa);
+        } catch (IllegalStateException e) {
+            // Error 409: Conflicto de horarios
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 
-            // Se guarda la reserva actualizada
-            Reserva actualizada = reservaRepository.save(reserva);
-            return ResponseEntity.ok(actualizada);
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error interno: " + e.getMessage());
         }
     }
 

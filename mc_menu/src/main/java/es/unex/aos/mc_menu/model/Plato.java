@@ -23,8 +23,8 @@ public class Plato {
     @JoinColumn(name = "idTipoPlato")
     private TipoPlato tipoPlato;
 
-    @OneToMany(mappedBy = "plato", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<IngredientePlato> ingredientesPlato;
+    @OneToMany(mappedBy = "plato", fetch = FetchType.LAZY)
+    private List<IngredientePlato> ingredientes;
 
 
     Plato() {
@@ -62,9 +62,9 @@ public class Plato {
     }
 
     public List<IngredientePlato> getIngredientes() {
-        return ingredientesPlato;
-    }
-    public void setIngredientes(List<IngredientePlato> ingredientesPlato) {
-        this.ingredientesPlato = ingredientesPlato;
+    return ingredientes;
+}
+    public void setIngredientes(List<IngredientePlato> ingredientes) {
+        this.ingredientes = ingredientes;
     }
 }

@@ -38,6 +38,19 @@ public class GeneralController {
         return menuClient.getPlatoById(id);
     }
 
+    // Realizar Pedido de Plato (Llama a MC-MENU, quien a su vez llama a MC-INGREDIENTES)
+    // POST /general/platos/{id}/pedido
+    @PostMapping("/platos/{id}/pedido")
+    public ResponseEntity<String> realizarPedidoPlato(@PathVariable Long id) {
+        try {
+            String respuesta = menuClient.realizarPedido(id);
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            // Capturamos si MC-MENU devuelve error (ej. 400 por falta de stock)
+            return ResponseEntity.badRequest().body("No se pudo realizar el pedido. Verifique el stock.");
+        }
+    }
+
     // ----- INGREDIENTES -----
     @GetMapping("/ingredientes")
     public List<Object> getIngredientes() {
@@ -47,17 +60,6 @@ public class GeneralController {
     @GetMapping("/ingredientes/{id}")
     public Object getIngrediente(@PathVariable Long id) {
         return ingredientesClient.getIngredienteById(id);
-    }
-
-    // ----- RESERVAS -----
-    @GetMapping("/reservas")
-    public List<Object> getReservas() {
-        return reservasClient.getReservas();
-    }
-
-    @GetMapping("/reservas/{id}")
-    public Object getReserva(@PathVariable Long id) {
-        return reservasClient.getReservaById(id);
     }
 
     // Reposición de Ingredientes (Llama a MC-INGREDIENTES)
@@ -71,17 +73,19 @@ public class GeneralController {
             return ResponseEntity.status(500).body("Error al solicitar reposición: " + e.getMessage());
         }
     }
-
-    // Realizar Pedido de Plato (Llama a MC-MENU, quien a su vez llama a MC-INGREDIENTES)
-    // POST /general/platos/{id}/pedido
-    @PostMapping("/platos/{id}/pedido")
-    public ResponseEntity<String> realizarPedidoPlato(@PathVariable Long id) {
-        try {
-            String respuesta = menuClient.realizarPedido(id);
-            return ResponseEntity.ok(respuesta);
-        } catch (Exception e) {
-            // Capturamos si MC-MENU devuelve error (ej. 400 por falta de stock)
-            return ResponseEntity.badRequest().body("No se pudo realizar el pedido. Verifique el stock.");
-        }
+    
+    // ----- RESERVAS -----
+    @GetMapping("/reservas")
+    public List<Object> getReservas() {
+        return reservasClient.getReservas();
     }
+
+    @GetMapping("/reservas/{id}")
+    public Object getReserva(@PathVariable Long id) {
+        return reservasClient.getReservaById(id);
+    }
+
+    
+
+    
 }

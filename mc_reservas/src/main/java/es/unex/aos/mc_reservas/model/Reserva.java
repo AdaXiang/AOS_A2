@@ -104,4 +104,10 @@ public class Reserva {
     public void setnComensales(Integer nComensales) {
         this.nComensales = nComensales;
     }
+
+    public String toString() {
+        return "Reserva [idReserva=" + idReserva + ", mesa=" + mesa + ", nombreCliente=" + nombreCliente + ", correo="
+                + correo + ", telefono=" + telefono + ", fechaReserva=" + fechaReserva + ", horaReserva=" + horaReserva
+                + ", duracion=" + duracion + ", nComensales=" + nComensales + "]";
+    }
 }
