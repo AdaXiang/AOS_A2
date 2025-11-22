@@ -1,10 +1,14 @@
 package es.unex.aos.mc_menu.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import java.util.List;
 
 @Entity
 public class Plato {
@@ -18,6 +22,10 @@ public class Plato {
     @ManyToOne
     @JoinColumn(name = "idTipoPlato")
     private TipoPlato tipoPlato;
+
+    @OneToMany(mappedBy = "plato", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<IngredientePlato> ingredientesPlato;
+
 
     Plato() {
     }
@@ -51,5 +59,12 @@ public class Plato {
     }
     public void setTipoPlato(TipoPlato tipoPlato) {
         this.tipoPlato = tipoPlato;
+    }
+
+    public List<IngredientePlato> getIngredientes() {
+        return ingredientesPlato;
+    }
+    public void setIngredientes(List<IngredientePlato> ingredientesPlato) {
+        this.ingredientesPlato = ingredientesPlato;
     }
 }

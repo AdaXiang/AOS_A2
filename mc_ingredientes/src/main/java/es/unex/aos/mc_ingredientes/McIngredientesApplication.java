@@ -47,8 +47,7 @@ public class McIngredientesApplication {
 		ingredienteRepository.save(i7);
 		ingredienteRepository.save(i8);
 		ingredienteRepository.save(i9);
-		ingredienteRepository.save(i10);
-	
+		ingredienteRepository.save(i10);	
 		
 		
  	}
