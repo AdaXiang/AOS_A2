@@ -3,6 +3,7 @@ package es.unex.aos.mc_menu.model;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
+import java.util.Objects;
 
 @Embeddable
 public class MenuPlatoId implements Serializable {
@@ -30,5 +31,17 @@ public class MenuPlatoId implements Serializable {
     public void setIdPlato(Long idPlato) {
         this.idPlato = idPlato;
     }
-    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MenuPlatoId that = (MenuPlatoId) o;
+        return Objects.equals(idMenu, that.idMenu) &&
+               Objects.equals(idPlato, that.idPlato);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idMenu, idPlato);
+    }
 }

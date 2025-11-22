@@ -29,4 +29,16 @@ public class IngredientePlatoId implements Serializable {
     public void setIdPlato(Long idPlato) {
         this.idPlato = idPlato;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IngredientePlatoId that = (IngredientePlatoId) o;
+        return idIngrediente.equals(that.idIngrediente) && idPlato.equals(that.idPlato);
+    }
+    @Override
+    public int hashCode() {
+        return idIngrediente.hashCode() + idPlato.hashCode();
+    }
 }

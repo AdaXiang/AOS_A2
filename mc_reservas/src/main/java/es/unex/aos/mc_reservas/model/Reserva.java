@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 public class Reserva {
 
@@ -24,8 +26,11 @@ public class Reserva {
     private String correo;
     private String telefono;
     
-    private LocalDate fechaReserva; // CAMBIADO de java.sql.Date
-    private LocalTime horaReserva;  // CAMBIADO de java.sql.Time
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaReserva;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime horaReserva;
     
     private Integer duracion;
     private Integer nComensales;

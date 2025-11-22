@@ -40,26 +40,26 @@ public class McReservasApplication {
 		mesaRepository.save(m4);
 
 		Reserva r1 = new Reserva(
-			m1,
-			"Carlos Pérez",
-			"carlos.perez@example.com",
-			"654123987",
-			LocalDate.of(2025, 11, 25),
-			LocalTime.of(20, 30),
-			90,
-			2
-		);
+            m1,
+            "Carlos Pérez",
+            "carlos.perez@example.com",
+            "654123987",
+            LocalDate.of(2025, 11, 25), 
+            LocalTime.of(20, 30),      
+            90,
+            2
+        );
 
-		Reserva r2 = new Reserva(
-			m2,
-			"María López",
-			"maria.lopez@example.com",
-			"612789456",
-			LocalDate.of(2025, 11, 25),
-			LocalTime.of(14, 0),
-			120,
-			4
-		);
+        Reserva r2 = new Reserva(
+            m2,
+            "María López",
+            "maria.lopez@example.com",
+            "612789456",
+            LocalDate.of(2025, 11, 25), 
+            LocalTime.of(14, 0),      
+            120,
+            4
+        );
 
 		reservaRepository.save(r1);
 		reservaRepository.save(r2);
