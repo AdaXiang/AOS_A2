@@ -27,28 +27,41 @@ public class McIngredientesApplication {
 
 	@PostConstruct
  	public void init() {
-		Ingrediente i1 = new Ingrediente("Tomate", 100.0f, 20.0f);
-		Ingrediente i2 = new Ingrediente("Lechuga", 50.0f, 10.0f);
-		Ingrediente i3 = new Ingrediente("Cebolla", 80.0f, 15.0f);
-		Ingrediente i4 = new Ingrediente("Queso", 200.0f, 30.0f);
-		Ingrediente i5 = new Ingrediente("Carne", 300.0f, 50.0f);
-		Ingrediente i6 = new Ingrediente("Pollo", 250.0f, 40.0f);
-		Ingrediente i7 = new Ingrediente("Pescado", 400.0f, 60.0f);
-		Ingrediente i8 = new Ingrediente("Pan", 150.0f, 25.0f);
-		Ingrediente i9 = new Ingrediente("Aceite", 500.0f, 100.0f);
-		Ingrediente i10 = new Ingrediente("Sal", 300.0f, 50.0f);
-		
-		ingredienteRepository.save(i1);
-		ingredienteRepository.save(i2);
-		ingredienteRepository.save(i3);
-		ingredienteRepository.save(i4);
-		ingredienteRepository.save(i5);
-		ingredienteRepository.save(i6);
-		ingredienteRepository.save(i7);
-		ingredienteRepository.save(i8);
-		ingredienteRepository.save(i9);
-		ingredienteRepository.save(i10);	
-		
+		Ingrediente i1 = new Ingrediente("Tomate", 100.0f, 10.0f);
+        Ingrediente i2 = new Ingrediente("Lechuga", 100.0f, 10.0f);
+        Ingrediente i3 = new Ingrediente("Carne", 50.0f, 5.0f); // Pongo menos para probar qué pasa si se gasta
+        Ingrediente i4 = new Ingrediente("Pan", 100.0f, 10.0f);
+        Ingrediente i5 = new Ingrediente("Queso", 100.0f, 10.0f);
+
+        ingredienteRepository.save(i1);
+        ingredienteRepository.save(i2);
+        ingredienteRepository.save(i3);
+        ingredienteRepository.save(i4);
+        ingredienteRepository.save(i5);
+		Proveedor prov1 = new Proveedor("Frutas Manolo", "manolo@frutas.com", "600111222");
+        Proveedor prov2 = new Proveedor("Carnes Pepe", "pepe@carnes.com", "600333444");
+        Proveedor prov3 = new Proveedor("Panadería La Miga", "info@lamiga.com", "600555666");
+
+        proveedorRepository.save(prov1);
+        proveedorRepository.save(prov2);
+        proveedorRepository.save(prov3);
+
+		// Frutas Manolo suministra Tomate y Lechuga
+        Suministro s1 = new Suministro(prov1, i1, 0.50f, 100); // Tomate a 0.50
+        Suministro s2 = new Suministro(prov1, i2, 0.30f, 50);  // Lechuga a 0.30
+
+        // Carnes Pepe suministra Carne y Queso
+        Suministro s3 = new Suministro(prov2, i3, 5.00f, 20);  // Carne a 5.00
+        Suministro s4 = new Suministro(prov2, i5, 2.50f, 30);  // Queso a 2.50
+
+        // Panadería La Miga suministra Pan
+        Suministro s5 = new Suministro(prov3, i4, 0.40f, 200); // Pan a 0.40
+
+        suministroRepository.save(s1);
+        suministroRepository.save(s2);
+        suministroRepository.save(s3);
+        suministroRepository.save(s4);
+        suministroRepository.save(s5);
 		
  	}
 

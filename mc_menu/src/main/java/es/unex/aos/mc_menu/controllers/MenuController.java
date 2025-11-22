@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import es.unex.aos.mc_menu.model.Menu;
 
 import es.unex.aos.mc_menu.repository.MenuRepository;
+import es.unex.aos.mc_menu.service.MenuService;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -22,12 +24,19 @@ public class MenuController {
 
     @Autowired 
     MenuRepository menuRepository;
+
+    @Autowired
+    MenuService menuService;
     
-    // GET /menus
     @GetMapping
     public ResponseEntity<Iterable<Menu>> getMenus() {
+        // 1. Se realiza la lógica de verificación y limpieza (eliminación de platos sin stock)
+        menuService.verificarDisponibilidadYActualizar();
+
+        // 2. Devolver los menús (que ahora tendrán menos platos si faltaba stock)
         return ResponseEntity.ok(menuRepository.findAll());
     }
+
 
     // GET /menus/{id}
     @GetMapping("/{id}")

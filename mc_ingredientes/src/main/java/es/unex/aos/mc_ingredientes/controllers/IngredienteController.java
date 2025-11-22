@@ -36,6 +36,43 @@ public class IngredienteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // POST /ingredientes/{id}/reposicion
+    @PostMapping("/{id}/reposicion")
+    public ResponseEntity<Void> reponerIngrediente(@PathVariable Long id) {
+        Optional<Ingrediente> optional = ingredienteRepository.findById(id);
+        if (optional.isPresent()) {
+            Ingrediente ingrediente = optional.get();
+            // Se aumenta el stock en una cantidad fija, por ejemplo 10 unidades
+            ingrediente.setCantidad(ingrediente.getCantidad() + 10);
+            ingredienteRepository.save(ingrediente);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Endpoint para consumir stock cuando se pide un plato
+    @PostMapping("/{id}/consumir/{cantidad}")
+    public ResponseEntity<Void> consumirIngrediente(@PathVariable Long id, @PathVariable Integer cantidad) {
+        Optional<Ingrediente> optional = ingredienteRepository.findById(id);
+        
+        if (optional.isPresent()) {
+            Ingrediente ingrediente = optional.get();
+            int nuevaCantidad = ingrediente.getCantidad() - cantidad;
+            
+            // Comprobamos que no nos quedamos en negativo
+            if (nuevaCantidad < 0) {
+                return ResponseEntity.badRequest().build(); // Error 400: No hay suficiente stock
+            }
+            
+            ingrediente.setCantidad(nuevaCantidad);
+            ingredienteRepository.save(ingrediente);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // POST /ingredientes
     @PostMapping
     public ResponseEntity<Ingrediente> createIngrediente(@RequestBody Ingrediente ingrediente) {

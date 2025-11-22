@@ -18,17 +18,27 @@ public class PlatoService {
         this.platoRepository = platoRepository;
     }
 
-    // public void verificarStock(Plato plato) {
-    //     for (IngredientePlato ip : plato.getIngredientes()) {
+    // Método para procesar el pedido de un plato
+    public void procesarPedido(Long idPlato) {
+        // 1. Buscar el plato
+        Plato plato = platoRepository.findById(idPlato)
+            .orElseThrow(() -> new RuntimeException("Plato no encontrado"));
 
-    //         Long idIng = ip.getId().getIdIngrediente();
-    //         Float cantidadNecesaria = ip.getCantidad();
-    //         Integer stock = ingredientesClient.getIngredienteById(idIng).getStock();
-
-    //         if (stock < cantidadNecesaria) {
-    //             platoRepository.delete(plato);
-    //             ingredientesClient.solicitarReposicion(idIng);
-    //         }
-    //     }
-    // }
+        // 2. Iterar sobre los ingredientes requeridos por el plato
+        for (IngredientePlato ip : plato.getIngredientes()) {
+            Long idIngrediente = ip.getId().getIdIngrediente();
+            
+            // Convertimos la cantidad (Float) a Integer para el stock
+            Integer cantidadAConsumir = ip.getCantidad().intValue(); 
+            
+            // 3. Llamar al microservicio de ingredientes para restar el stock
+            try {
+                ingredientesClient.consumirIngrediente(idIngrediente, cantidadAConsumir);
+                System.out.println("Consumido ingrediente " + idIngrediente + ": -" + cantidadAConsumir);
+            } catch (Exception e) {
+                // Si falla (por ejemplo, stock insuficiente), lanzamos error
+                throw new RuntimeException("Error al consumir ingrediente " + idIngrediente + ": " + e.getMessage());
+            }
+        }
+    }
 }

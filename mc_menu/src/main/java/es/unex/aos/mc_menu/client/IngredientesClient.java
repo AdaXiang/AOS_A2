@@ -1,24 +1,20 @@
 package es.unex.aos.mc_menu.client;
 
-import java.util.List;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import es.unex.aos.mc_menu.model.IngredienteDto;
 
-@FeignClient(name = "MC-INGREDIENTES")
+@FeignClient(name = "mc-ingredientes")
 public interface IngredientesClient {
 
-    @GetMapping("/ingredientes")
-    List<Object> getIngredientes();
-
     @GetMapping("/ingredientes/{id}")
-    Object getIngredienteById(@PathVariable Long id);
+    IngredienteDto getIngredienteById(@PathVariable("id") Long id);
 
-    @GetMapping("/ingredientes/{id}/stock")
-    Integer getStock(@PathVariable Long id);
+    @PostMapping("/ingredientes/{id}/reposicion")
+    void solicitarReposicion(@PathVariable("id") Long id);
 
-    @PostMapping("/ingredientes/")
-    void solicitarReposicion(@PathVariable Long id);
+    @PostMapping("/ingredientes/{id}/consumir/{cantidad}")
+    void consumirIngrediente(@PathVariable("id") Long id, @PathVariable("cantidad") Integer cantidad);
 }

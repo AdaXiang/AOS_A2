@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import es.unex.aos.mc_menu.service.PlatoService;
 import es.unex.aos.mc_menu.model.Plato;
 import es.unex.aos.mc_menu.repository.PlatoRepository;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -23,6 +24,9 @@ public class PlatoController {
 
     @Autowired 
     PlatoRepository platoRepository;
+    @Autowired
+    private PlatoService platoService;
+
 
     @GetMapping
     public ResponseEntity<Iterable<Plato>> getPlatos() {
@@ -40,6 +44,18 @@ public class PlatoController {
     public ResponseEntity<Plato> createPlato(@RequestBody Plato plato) {
         Plato platoGuardado = platoRepository.save(plato);
         return ResponseEntity.status(201).body(platoGuardado);
+    }
+
+    // POST /platos/{id}/pedido
+    @PostMapping("/{id}/pedido")
+    public ResponseEntity<String> realizarPedido(@PathVariable Long id) {
+        try {
+            platoService.procesarPedido(id);
+            return ResponseEntity.ok("Pedido realizado correctamente. Ingredientes descontados.");
+        } catch (RuntimeException e) {
+            // Capturamos si no hay plato o no hay stock
+            return ResponseEntity.badRequest().body("Error al realizar el pedido: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")

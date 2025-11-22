@@ -2,8 +2,10 @@ package es.unex.aos.mc_general.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,5 +58,30 @@ public class GeneralController {
     @GetMapping("/reservas/{id}")
     public Object getReserva(@PathVariable Long id) {
         return reservasClient.getReservaById(id);
+    }
+
+    // Reposición de Ingredientes (Llama a MC-INGREDIENTES)
+    // POST /general/ingredientes/{id}/reposicion
+    @PostMapping("/ingredientes/{id}/reposicion")
+    public ResponseEntity<String> reponerIngrediente(@PathVariable Long id) {
+        try {
+            ingredientesClient.reponerIngrediente(id);
+            return ResponseEntity.ok("Reposición solicitada correctamente para el ingrediente " + id);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al solicitar reposición: " + e.getMessage());
+        }
+    }
+
+    // Realizar Pedido de Plato (Llama a MC-MENU, quien a su vez llama a MC-INGREDIENTES)
+    // POST /general/platos/{id}/pedido
+    @PostMapping("/platos/{id}/pedido")
+    public ResponseEntity<String> realizarPedidoPlato(@PathVariable Long id) {
+        try {
+            String respuesta = menuClient.realizarPedido(id);
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            // Capturamos si MC-MENU devuelve error (ej. 400 por falta de stock)
+            return ResponseEntity.badRequest().body("No se pudo realizar el pedido. Verifique el stock.");
+        }
     }
 }

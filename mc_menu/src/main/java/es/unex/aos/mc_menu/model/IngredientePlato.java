@@ -2,6 +2,8 @@ package es.unex.aos.mc_menu.model;
 
 import javax.persistence.Entity;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -46,4 +48,5 @@ public class IngredientePlato {
     public void setCantidad(Float cantidad) {
         this.cantidad = cantidad;
     }
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient(name = "MC-INGREDIENTES")
 public interface IngredientesClient {
@@ -14,4 +15,7 @@ public interface IngredientesClient {
 
     @GetMapping("/ingredientes/{id}")
     Object getIngredienteById(@PathVariable Long id);
+
+    @PostMapping("/ingredientes/{id}/reposicion")
+    void reponerIngrediente(@PathVariable("id") Long id);
 }
