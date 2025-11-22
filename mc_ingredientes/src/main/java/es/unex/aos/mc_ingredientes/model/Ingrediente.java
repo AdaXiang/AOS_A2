@@ -14,6 +14,14 @@ public class Ingrediente {
     private String nombre;
     private Integer cantidad;
     private Integer cantidadMin;
+
+    public Ingrediente() {
+    }
+    public Ingrediente(String nombre, Float cantidad, Float cantidadMin) {
+        this.nombre = nombre;
+        this.cantidad = cantidad.intValue();
+        this.cantidadMin = cantidadMin.intValue();
+    }
     
     public Long getId() {
         return id;

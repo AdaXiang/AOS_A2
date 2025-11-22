@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.unex.aos.mc_menu.model.IngredientePlato;
-import es.unex.aos.mc_menu.model.IngredientePlatoId;
 import es.unex.aos.mc_menu.model.MenuPlato;
 import es.unex.aos.mc_menu.model.MenuPlatoId;
 import es.unex.aos.mc_menu.repository.MenuPlatoRepository;

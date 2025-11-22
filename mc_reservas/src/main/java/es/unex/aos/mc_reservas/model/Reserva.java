@@ -30,6 +30,18 @@ public class Reserva {
     public Reserva() {
     }
 
+    public Reserva(Mesa mesa, String nombreCliente, String correo, String telefono, Date fechaReserva, Time horaReserva,
+            Integer duracion, Integer nComensales) {
+        this.fechaReserva = fechaReserva;
+        this.horaReserva = horaReserva;
+        this.nombreCliente = nombreCliente;
+        this.telefono = telefono;
+        this.mesa = mesa;
+        this.correo = correo;
+        this.duracion = duracion;
+        this.nComensales = nComensales;
+    }
+
     public long getIdReserva() {
         return idReserva;
     }

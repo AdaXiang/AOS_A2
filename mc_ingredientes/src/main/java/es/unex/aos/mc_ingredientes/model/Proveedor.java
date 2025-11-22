@@ -15,6 +15,14 @@ public class Proveedor {
     private String correo;
     private String telefono;
 
+    public Proveedor() {
+    }
+    public Proveedor(String nombre, String correo, String telefono) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.telefono = telefono;
+    }
+
     public Long getId() {
         return id;
     }
