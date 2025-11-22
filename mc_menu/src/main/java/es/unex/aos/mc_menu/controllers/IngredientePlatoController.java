@@ -14,8 +14,10 @@ import java.util.Optional;
 
 import es.unex.aos.mc_menu.model.IngredientePlato;
 import es.unex.aos.mc_menu.model.IngredientePlatoId;
+import es.unex.aos.mc_menu.model.Plato;
 import es.unex.aos.mc_menu.repository.IngredientePlatoRepository;
 import org.springframework.web.bind.annotation.RequestBody;
+import es.unex.aos.mc_menu.repository.PlatoRepository;
 
 @RestController
 @RequestMapping("/ingredienteplatos")
@@ -23,6 +25,9 @@ public class IngredientePlatoController {
 
     @Autowired 
     IngredientePlatoRepository ingredientePlatoRepository;
+
+    @Autowired
+    PlatoRepository platoRepository;
 
     // GET /ingredienteplatos
     @GetMapping
@@ -44,9 +49,26 @@ public class IngredientePlatoController {
 
     // POST /ingredienteplatos
     @PostMapping
-    public ResponseEntity<IngredientePlato> createIngredientePlato(@RequestBody IngredientePlato ingredientePlato) {
-        IngredientePlato ingredientePlatoGuardado = ingredientePlatoRepository.save(ingredientePlato);
-        return ResponseEntity.status(201).body(ingredientePlatoGuardado);
+    public ResponseEntity<String> createIngredientePlato(@RequestBody IngredientePlato ingredientePlato) {
+        // 1. Validar que venga el ID
+        if (ingredientePlato.getId() == null || ingredientePlato.getId().getIdPlato() == null) {
+            return ResponseEntity.badRequest().body("Falta el ID del plato o del ingrediente");
+        }
+
+        // 2. Buscar el Plato real en la base de datos
+        Long idPlato = ingredientePlato.getId().getIdPlato();
+        Optional<Plato> platoOpt = platoRepository.findById(idPlato);
+
+        if (platoOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("El plato con ID " + idPlato + " no existe.");
+        }
+
+        // 3. Asignar la entidad Plato a la relación para satisfacer @MapsId
+        ingredientePlato.setPlato(platoOpt.get());
+
+        // 4. Guardar el IngredientePlato
+        IngredientePlato guardado = ingredientePlatoRepository.save(ingredientePlato);
+        return ResponseEntity.status(201).body(guardado.toString());
     }
 
     // PUT /ingredienteplatos/{idIngrediente}/{idPlato}

@@ -2,8 +2,8 @@ package es.unex.aos.mc_reservas;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.annotation.PostConstruct;
 
@@ -12,7 +12,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-import com.netflix.discovery.converters.Auto;
 
 import es.unex.aos.mc_reservas.model.Mesa;
 import es.unex.aos.mc_reservas.model.Reserva;
@@ -45,8 +44,8 @@ public class McReservasApplication {
 			"Carlos Pérez",
 			"carlos.perez@example.com",
 			"654123987",
-			Date.valueOf("2025-11-25"),
-			Time.valueOf("20:30:00"),
+			LocalDate.of(2025, 11, 25),
+			LocalTime.of(20, 30),
 			90,
 			2
 		);
@@ -56,8 +55,8 @@ public class McReservasApplication {
 			"María López",
 			"maria.lopez@example.com",
 			"612789456",
-			Date.valueOf("2025-11-25"),
-			Time.valueOf("14:00:00"),
+			LocalDate.of(2025, 11, 25),
+			LocalTime.of(14, 0),
 			120,
 			4
 		);

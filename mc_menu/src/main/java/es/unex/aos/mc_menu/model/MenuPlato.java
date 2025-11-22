@@ -52,4 +52,8 @@ public class MenuPlato {
     public void setPlato(Plato plato) {
         this.plato = plato;
     }
+
+    public String toString() {
+        return "MenuPlato [idMenu=" + id.getIdMenu() + ", idPlato=" + id.getIdPlato() + "]";
+    }
 }

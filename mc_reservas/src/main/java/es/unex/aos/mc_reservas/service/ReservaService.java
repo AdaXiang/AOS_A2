@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.unex.aos.mc_reservas.model.Mesa;
 import es.unex.aos.mc_reservas.model.Reserva;
+import es.unex.aos.mc_reservas.repository.MesaRepository;
 import es.unex.aos.mc_reservas.repository.ReservaRepository;
 
 @Service
@@ -15,27 +17,36 @@ public class ReservaService {
     @Autowired
     private ReservaRepository reservaRepository;
 
+    @Autowired
+    MesaRepository mesaRepository;
+
     public Reserva crearReserva(Reserva reserva) throws Exception {
         
-        // 1. Validaciones básicas
-        if (reserva.getMesa() == null || reserva.getFechaReserva() == null || 
-            reserva.getHoraReserva() == null || reserva.getDuracion() == null) {
-            throw new IllegalArgumentException("Faltan datos obligatorios (mesa, fecha, hora o duración).");
+        // 1. Validar datos básicos
+        if (reserva.getMesa() == null || reserva.getMesa().getId() == 0) {
+             throw new IllegalArgumentException("Debe especificar una mesa válida.");
         }
+        
+        // 2. BUSCAR LA MESA REAL EN LA BASE DE DATOS
+        Mesa mesaReal = mesaRepository.findById(reserva.getMesa().getId())
+                .orElseThrow(() -> new IllegalArgumentException("La mesa especificada no existe."));
+        
+        // Asignamos la mesa real gestionada por JPA
+        reserva.setMesa(mesaReal);
 
-        // 2. Recuperar las reservas que ya existen para esa mesa en ese día
+        // 3. Recuperar las reservas que ya existen para esa mesa en ese día
         List<Reserva> reservasDelDia = reservaRepository.findByMesaIdAndFechaReserva(
                 reserva.getMesa().getId(), 
                 reserva.getFechaReserva()
         );
 
-        // 3. Calcular el inicio y fin de la NUEVA reserva
-        LocalTime inicioNueva = reserva.getHoraReserva().toLocalTime();
+        // 4. Calcular el inicio y fin de la NUEVA reserva
+        LocalTime inicioNueva = reserva.getHoraReserva();
         LocalTime finNueva = inicioNueva.plusMinutes(reserva.getDuracion());
 
-        // 4. Iterar para ver si se solapa con alguna existente
+        // 5. Iterar para ver si se solapa con alguna existente
         for (Reserva existente : reservasDelDia) {
-            LocalTime inicioExistente = existente.getHoraReserva().toLocalTime();
+            LocalTime inicioExistente = existente.getHoraReserva();
             LocalTime finExistente = inicioExistente.plusMinutes(existente.getDuracion());
 
             // Lógica de solapamiento
@@ -69,7 +80,7 @@ public class ReservaService {
         );
 
         // Calcular el intervalo de tiempo de la reserva YA ACTUALIZADA
-        LocalTime inicioNueva = reserva.getHoraReserva().toLocalTime();
+        LocalTime inicioNueva = reserva.getHoraReserva();
         LocalTime finNueva = inicioNueva.plusMinutes(reserva.getDuracion());
 
         for (Reserva existente : reservasDelDia) {
@@ -77,7 +88,7 @@ public class ReservaService {
                 continue; 
             }
 
-            LocalTime inicioExistente = existente.getHoraReserva().toLocalTime();
+            LocalTime inicioExistente = existente.getHoraReserva();
             LocalTime finExistente = inicioExistente.plusMinutes(existente.getDuracion());
 
             // Comprobamos solapamiento

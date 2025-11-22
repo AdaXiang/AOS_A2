@@ -50,4 +50,7 @@ public class IngredientePlato {
         this.cantidad = cantidad;
     }
 
+    public String toString() {
+        return "IngredientePlato [id=" + id + ", cantidad=" + cantidad + "]";
+    }
 }

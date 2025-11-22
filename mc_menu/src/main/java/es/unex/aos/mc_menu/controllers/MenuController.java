@@ -1,6 +1,7 @@
 package es.unex.aos.mc_menu.controllers;
 import java.util.Optional;
 
+import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,12 +28,16 @@ public class MenuController {
 
     @Autowired
     MenuService menuService;
+
+    @Autowired
+    Environment environment;
     
     @GetMapping
     public ResponseEntity<Iterable<Menu>> getMenus() {
         // 1. Se realiza la lógica de verificación y limpieza (eliminación de platos sin stock)
         menuService.verificarDisponibilidadYActualizar();
-
+        String puerto = environment.getProperty("local.server.port");
+        System.out.println("--> Respondiendo GET /menus desde la instancia en el puerto: " + puerto);
         // 2. Devolver los menús (que ahora tendrán menos platos si faltaba stock)
         return ResponseEntity.ok(menuRepository.findAll());
     }

@@ -13,15 +13,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.unex.aos.mc_menu.model.Menu;
 import es.unex.aos.mc_menu.model.MenuPlato;
 import es.unex.aos.mc_menu.model.MenuPlatoId;
+import es.unex.aos.mc_menu.model.Plato;
 import es.unex.aos.mc_menu.repository.MenuPlatoRepository;
+import es.unex.aos.mc_menu.repository.MenuRepository;
+import es.unex.aos.mc_menu.repository.PlatoRepository;
 
 @RestController
 @RequestMapping("/menuplatos")
 public class MenuPlatoController {
     @Autowired 
     MenuPlatoRepository menuPlatoRepository;
+    @Autowired
+    MenuRepository menuRepository;
+    @Autowired
+    PlatoRepository platoRepository;
 
     // GET /menuplatos
     @GetMapping
@@ -43,9 +51,28 @@ public class MenuPlatoController {
 
     // POST /menuplatos
     @PostMapping
-    public ResponseEntity<MenuPlato> createMenuPlato(@RequestBody MenuPlato menuPlato) {
-        MenuPlato menuPlatoGuardado = menuPlatoRepository.save(menuPlato);
-        return ResponseEntity.status(201).body(menuPlatoGuardado);
+    public ResponseEntity<String> createMenuPlato(@RequestBody MenuPlato menuPlato) {
+       // 1. Validar IDs
+        if (menuPlato.getId() == null) return ResponseEntity.badRequest().body("IDs nulos");
+        
+        Long idMenu = menuPlato.getId().getIdMenu();
+        Long idPlato = menuPlato.getId().getIdPlato();
+
+        // 2. Buscar entidades
+        Optional<Menu> menuOpt = menuRepository.findById(idMenu);
+        Optional<Plato> platoOpt = platoRepository.findById(idPlato);
+
+        if (menuOpt.isEmpty() || platoOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Menú o Plato no encontrados.");
+        }
+
+        // 3. Asignar relaciones para @MapsId
+        menuPlato.setMenu(menuOpt.get());
+        menuPlato.setPlato(platoOpt.get());
+
+        // 4. Guardar
+        MenuPlato guardado = menuPlatoRepository.save(menuPlato);
+        return ResponseEntity.status(201).body(guardado.toString());
     }
 
     // PUT /menuplatos/{idMenu}/{idPlato}
