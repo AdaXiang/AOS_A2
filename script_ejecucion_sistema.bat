@@ -32,9 +32,9 @@ for %%S in (%SERVICES%) do (
     start "%%S-1" cmd /k "cd %BASE_DIR%\%%S && mvn spring-boot:run"
     timeout /t 10
 
-    @REM echo Iniciando INSTANCIA 2 del microservicio: %%S
-    @REM start "%%S-2" cmd /k "cd %BASE_DIR%\%%S && mvn spring-boot:run"
-    @REM timeout /t 10
+    echo Iniciando INSTANCIA 2 del microservicio: %%S
+    start "%%S-2" cmd /k "cd %BASE_DIR%\%%S && mvn spring-boot:run"
+    timeout /t 10
 )
 
 echo Iniciando mc_general...

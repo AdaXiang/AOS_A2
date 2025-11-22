@@ -41,42 +41,37 @@ public class ReservaController {
 
     // POST /reservas
     @PostMapping
-    public ResponseEntity<String> createReserva(@RequestBody Reserva reserva) {
+    public ResponseEntity<Reserva> createReserva(@RequestBody Reserva reserva) { 
         try {
             Reserva nuevaReserva = reservaService.crearReserva(reserva);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaReserva.toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaReserva); 
             
         } catch (IllegalArgumentException e) {
-            // Error 400: Datos incorrectos
-            return ResponseEntity.badRequest().body(e.getMessage());
-            
+            return ResponseEntity.badRequest().build(); 
         } catch (IllegalStateException e) {
-            // Error 409: Conflicto (Mesa ocupada)
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-            
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
-            // Error 500: Cualquier otra cosa
-            return ResponseEntity.internalServerError().body("Error interno: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     // PUT /reservas/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateReserva(@PathVariable Long id, @RequestBody Reserva reservaDetails) {
+    public ResponseEntity<Reserva> updateReserva(@PathVariable Long id, @RequestBody Reserva reservaDetails) {
         try {
             Reserva reservaActualizada = reservaService.actualizarReserva(id, reservaDetails);
-            return ResponseEntity.ok(reservaActualizada.toString());
+            return ResponseEntity.ok(reservaActualizada);
 
         } catch (IllegalArgumentException e) {
             // Error 404 o 400: No existe la reserva o datos inválidos
-            return ResponseEntity.notFound().build(); // O badRequest() según prefieras
+            return ResponseEntity.notFound().build(); 
 
         } catch (IllegalStateException e) {
             // Error 409: Conflicto de horarios
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error interno: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
         }
     }
 

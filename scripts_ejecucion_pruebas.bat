@@ -132,23 +132,23 @@ echo.
 echo.
 
 echo 4.4. Crear Reserva en esa mesa (ID 7)
-curl -X POST "%HOST%/reservas" %HEADER% -d "{\"mesa\": {\"id\": 7}, \"nombreCliente\": \"Grupo Grande\", \"correo\": \"grupo@mail.com\", \"telefono\": \"111222333\", \"fechaReserva\": \"2025-12-31\", \"horaReserva\": \"21:00:00\", \"duracion\": 120, \"nComensales\": 8}"
+curl -X POST "%HOST%/reservas" %HEADER% -d "{\"mesa\": {\"id\": 7, \"nPersonas\": 10, \"enTerraza\": true}, \"nombreCliente\": \"Grupo Grande\", \"correo\": \"grupo@mail.com\", \"telefono\": \"111222333\", \"fechaReserva\": \"2025-12-31\", \"horaReserva\": \"21:00:00\", \"duracion\": 120, \"nComensales\": 8}"
 echo.
 echo.
 
 echo 4.5. Modificar la Reserva (PUT) - Cambiar comensales a 10
-REM Asumimos que la reserva tiene ID 9 (despues de las del init)
-curl -X PUT "%HOST%/reservas/9" %HEADER% -d "{\"nComensales\": 10}"
+REM Asumimos que la reserva tiene ID 8 (despues de las del init)
+curl -X PUT "%HOST%/reservas/8" %HEADER% -d "{\"mesa\": {\"id\": 7, \"nPersonas\": 10, \"enTerraza\": true}, \"nombreCliente\": \"Grupo Grande\", \"correo\": \"grupo@mail.com\", \"telefono\": \"111222333\", \"fechaReserva\": \"2025-12-31\", \"horaReserva\": \"21:00:00\", \"duracion\": 120, \"nComensales\": 10}"
 echo.
 echo.
 
 echo 4.6. Verificar la modificación
-curl -X GET "%HOST%/reservas/9"
+curl -X GET "%HOST%/reservas/8"
 echo.
 echo.
 
 echo 4.7. Eliminar la Reserva (DELETE)
-curl -X DELETE "%HOST%/reservas/9"
+curl -X DELETE "%HOST%/reservas/8"
 echo.
 echo.
 
